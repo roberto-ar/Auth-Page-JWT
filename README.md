@@ -22,3 +22,6 @@ This project is focused on understanding and implementing JSON Web Tokens (JWT) 
 1. Clone the repository.
 2. Install dependencies.
 3. Follow the setup instructions in the documentation.
+
+
+![alt text](image.png)
