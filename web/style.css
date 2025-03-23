@@ -117,19 +117,46 @@
         justify-content: center;
         gap: 20px;
     }
-    .messages {
-        display: block;
-        color: rgb(255, 255, 255);
-        font-size: 14px;
-        margin: 10px;
+
+    .alert {
+        position: fixed;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
         text-align: center;
+        z-index: 1000;
+        transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        max-width: 250px;
+    }
+    
+    .alert.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    
+    .alert.hidden {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-15px);
+    }
+    
+    .alert.success {
+        box-shadow: 0 0 10px rgba(0, 255, 127, 0.7);
+        background: rgba(0, 255, 127, 0.2);
+    }
+    
+    .alert.error {
+        box-shadow: 0 0 10px rgba(255, 69, 69, 0.7);
+        background: rgba(255, 69, 69, 0.2);
     }
     #login-page {
         display: none;
     }
     #register-page {
-        display: none;
-    }
-    #protected-page {
         display: none;
     }

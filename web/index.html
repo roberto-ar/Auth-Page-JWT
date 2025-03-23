@@ -28,8 +28,6 @@
             <label for="password">Contraseña</label>
             <input type="password" id="login-password" class="input" placeholder="Ingresa tu contraseña" required>
         </div>
-
-        <span class="messages-login"></span> 
         <button type="submit" class="btn">Entrar</button>
     </form>
 </div>
@@ -52,10 +50,13 @@
             <label for="confirm-password">Confirmar Contraseña</label>
             <input type="password" id="confirm-password" class="input" placeholder="Confirma la contraseña" required>
         </div>
-        <span class="messages-register"></span> 
         <button type="submit" class="btn">Registrar</button>
     </form>
 </div>
+<div id="alert-box" class="alert hidden">
+    <p id="alert-message"></p>
+</div>
+
 <script src="main.js"></script>
 </body>
 </html>

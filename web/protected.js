@@ -1,5 +1,14 @@
+
 const btnLogout = document.getElementById("btnLogout");
-console.log(btnLogout);
+const title = document.querySelector(".title");
+const message = document.getElementById("protected-messages");
+
+fetch('http://localhost:3000/data')
+.then(res => res.json())
+.then(data =>{
+    title.textContent = `Hola bienvenido ${data.username}`;
+})
+
 btnLogout.addEventListener("click", () =>{
     fetch('http://localhost:3000/logout', {
         method : "POST",
@@ -7,7 +16,12 @@ btnLogout.addEventListener("click", () =>{
         "Content-Type": "application/json"
         }
     }).then(res =>{
-        console.log(res);
-        window.location.href = "/";
+        if(res.ok){
+            message.textContent = "Cerrando sesión... con exito"
+            setTimeout(()=>{
+                window.location.href = "/";
+                message.textContent = "";
+            },2000);
+        }
     });
 })
