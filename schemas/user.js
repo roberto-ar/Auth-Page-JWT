@@ -5,6 +5,6 @@ const userSchema = z.object({
     password : z.string({message : "Password debe ser un texto"}).min(6, {message : "Password debe de contener 6 caracteres como minimo"})
 });
 
-export function validateUser(user){
+export function validate(user){
     return userSchema.safeParse(user);
 }
