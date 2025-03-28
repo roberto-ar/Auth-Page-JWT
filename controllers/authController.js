@@ -49,7 +49,7 @@ export class authController{
                 error: "Este username ya está registrado"
             })
         }
-        const newUser = await this.authModel.createUser(username, password);
+        const newUser = await this.authModel.createUser({username, password});
         const token = jwt.sign({
             id : newUser._id,
             username : newUser.username
