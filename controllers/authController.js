@@ -10,7 +10,7 @@ export class authController{
     }
 
     index = async(req, res)=>{
-        res.sendFile(path.join(SERVER_WEB,  'index.html'));
+        res.sendFile(path.join(SERVER_WEB,  'protected.html'));
     }
 
     login = async(req, res) =>{

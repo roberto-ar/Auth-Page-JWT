@@ -7,6 +7,7 @@ export function validateMiddleware(req, res, next){
     //validaciones de token
     const {username, password} = req.body;
     const token = req.cookies.access_token;
+    console.log(token);
     if(token){
         try{
             jwt.verify(token, SECRET_JWT_KEY);
