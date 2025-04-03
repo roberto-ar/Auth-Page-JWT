@@ -56,8 +56,12 @@ registerForm.addEventListener("submit", (e) =>{
             },2000);
         }
         else{
-            showAlert("Error al registrarse", "error");
+            res.json().then(data => {
+                showAlert(data.error, "error");
+            })
         }
+    }).catch(error =>{
+        showAlert("Error en el servidor", "error");
     });
 
 });
@@ -87,8 +91,12 @@ loginForm.addEventListener("submit", (e) =>{
             },2000);
         }
         else{
-            showAlert("Error al iniciar sesión", "error");
+            res.json().then(data => {
+                showAlert(data.error, "error");
+            });
         }
+    }).catch(error =>{
+        showAlert("Error en el servidor", "error");
     });
 })
 

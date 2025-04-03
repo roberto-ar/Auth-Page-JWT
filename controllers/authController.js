@@ -1,6 +1,7 @@
 
 import { SERVER_WEB } from '../config.js';
 import { SECRET_JWT_KEY } from '../config.js';
+import { ErrorLogin, ErrorRegister } from '../errors/authErrors.js'
 import path from 'node:path';
 import jwt from 'jsonwebtoken';
 
@@ -13,54 +14,58 @@ export class authController{
         res.sendFile(path.join(SERVER_WEB,  'protected.html'));
     }
 
-    login = async(req, res) =>{
+    login = async(req, res, next) =>{
         const {username, password} = req.body;
-        const user = await this.authModel.getByUsername({username});
-        if(!user){
-            return res.status(401).json({
-                error: "Usuario no encontrado"
-            })
+        try{
+            const user = await this.authModel.getByUsername({username});
+            if(!user){
+                throw new ErrorLogin("Usuario no encontrado");
+            }
+            const isValid = await this.authModel.comparePassword({password : password, userPassword : user.password});
+            if(!isValid){
+                throw new ErrorLogin("Contraseña incorrecta");
+            }
+            const token = jwt.sign({
+                id : user._id,
+                username : user.username
+            }, SECRET_JWT_KEY,{expiresIn: '1h'});
+    
+            res.cookie('access_token', token,{
+                httpOnly : true,
+                secure : process.env.NODE_ENV == 'production',
+                sameSite : 'strict',
+                maxAge : 1000 * 60 * 60
+            }).send({token});
+        }catch(error){
+            next(error);
         }
-        const isValid = await this.authModel.comparePassword({password : password, userPassword : user.password});
-        if(!isValid){
-            return res.status(401).json({
-                error: "Contraseña incorrecta"
-            })
-        }
-
-        const token = jwt.sign({
-            id : user._id,
-            username : user.username
-        }, SECRET_JWT_KEY,{expiresIn: '1h'});
-
-        res.cookie('access_token', token,{
-            httpOnly : true,
-            secure : process.env.NODE_ENV == 'production',
-            sameSite : 'strict',
-            maxAge : 1000 * 60 * 60
-        }).send({token});
     }
 
-    register = async(req, res) =>{
-        const {username, password} = req.body;
-        const user = await this.authModel.getByUsername({username});
-        if(user){
-            return res.status(401).json({
-                error: "Este username ya está registrado"
-            })
+    register = async(req, res, next) =>{
+        try{
+            const {username, password} = req.body;
+            const user = await this.authModel.getByUsername({username});
+            if(user){
+                throw new ErrorRegister("Usuario ya existe");
+            }
+            const newUser = await this.authModel.createUser({username, password});
+            if(!newUser){
+                throw new ErrorRegister("Error al crear el usuario");
+            }
+            const token = jwt.sign({
+                id : newUser._id,
+                username : newUser.username
+            }, SECRET_JWT_KEY,{expiresIn: '1h'});
+    
+            res.cookie('access_token', token,{
+                httpOnly : true,
+                secure : process.env.NODE_ENV == 'production',
+                sameSite : 'strict',
+                maxAge : 1000 * 60 * 60
+            }).send({token});
+        }catch(error){
+            next(error);
         }
-        const newUser = await this.authModel.createUser({username, password});
-        const token = jwt.sign({
-            id : newUser._id,
-            username : newUser.username
-        }, SECRET_JWT_KEY,{expiresIn: '1h'});
-
-        res.cookie('access_token', token,{
-            httpOnly : true,
-            secure : process.env.NODE_ENV == 'production',
-            sameSite : 'strict',
-            maxAge : 1000 * 60 * 60
-        }).send({token});
     }
     logout = async(req, res) =>{
         res.clearCookie('access_token').sendStatus(201);
