@@ -5,6 +5,6 @@ export const errorHandler = (error, req, res, next) => {
         });
     }
     return res.status(401).json({
-        error : error.message || "Error iniciando sesión"
+        error : error.message || "Error en el servidor"
     });
 }
